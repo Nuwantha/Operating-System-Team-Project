@@ -1,4 +1,4 @@
- /*
+  /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -66,83 +66,46 @@ public class Schedular {
 
     public void sheduleFCFS() {
 
-        int Ttime = 0;
+       int Ttime = 0;
         int j = 0;
         Process min = processlist.get(0);
         Process min1 = processlist.get(0);
+        ArrayList<Process> currprocess = new ArrayList<Process>();
 
         while (processlist.size() > 0) {
-
-            if (j == 0) {
-                for (int i = 0; i < processlist.size() - 1; i++) {
-                    if (processlist.get(i).getArivalTime() <= processlist.get(i + 1).getArivalTime()) {
-                        min = processlist.get(i);
-                    } else {
-                        min = processlist.get(i + 1);
-                    }
+            for (int i = 0; i < processlist.size(); i++) {
+                if (processlist.get(i).getStartTime() <= Ttime) {
+                    currprocess.add(processlist.get(i));
                 }
             }
 
-            if (min.getServiceTime() == 0) {
-
-                processlist.remove(min);
-                if (processlist.size() > 0) {
-                    min = processlist.get(0);
-                } else {
-                    min = min1;
+            for (Process l : currprocess) {
+                if (l.getStartTime() <= min.getStartTime()) {
+                    min = l;
                 }
-                j = 0;
-                continue;
-            } else if (min.getServiceTime() > 0) {
-                if (min.getArivalTime() <= Ttime) {
+            }
+            while (min.getServiceTime() > 0) {
+                if (min.getStartTime() <= Ttime) {
                     timelist.add(min);
                     min.setServiceTime(min.getServiceTime() - 1);
+
+                    Ttime++;
                 } else {
                     timelist.add(null);
+                    Ttime++;
                 }
-                j = 1;
             }
+            processlist.remove(min);
+            if (processlist.size() > 0) {
+                min = processlist.get(0);
+            } else {
+                min = min1;
+            }
+            currprocess.clear();
 
-            Ttime++;
         }
-
-    
-    }
-    
-     public void scheduleRoundRobin(){
-          // Sorts the array list using comparator according to the starttime
-       //Collections.sort(processlist, new Process());
-         int timeQuantum=2;
-         int tempQuantum=timeQuantum;
-         int time=0;
-         int i=0;
-         while (processlist.size()>0){
-             if (processlist.get(i).getArivalTime()<=time){ //if the process has arrived at the time
-                if (tempQuantum==0){                        //if the timequantum allocated has finished for the recently executed process
-                    Process temp = processlist.remove(i);   // add that process to the end of the queue
-                    processlist.add(temp);
-                    tempQuantum=timeQuantum;            
-                   
-                }
-                else {    
-                    processlist.get(i).setServiceTime((processlist.get(i).getServiceTime())-1); //execute the process 
-                    tempQuantum--;
-                  
-                    timelist.add(processlist.get(i));        
-                }
-                if (processlist.get(i).getServiceTime()==0){    //check if the process currenly has finished
-                            processlist.remove(i);
-                            tempQuantum=timeQuantum;
-                          
-                }
-            
-             }
-        time++;                   
-             
-             
-        } 
-         for(int k=0;k<timelist.size();k++){
-            System.out.print(timelist.get(k)+" "); 
+        for (int k = 0; k < timelist.size(); k++) {
+            System.out.print(timelist.get(k).getProcessId() + " ");
         }
               
          
