@@ -566,12 +566,13 @@
             <Component class="javax.swing.JComboBox" name="algorithemChoosingCombo">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="5">
+                  <StringArray count="6">
                     <StringItem index="0" value="First In First Out"/>
                     <StringItem index="1" value="Shortest Time Remaining"/>
                     <StringItem index="2" value="Shortest Process Next"/>
                     <StringItem index="3" value="Round Robin"/>
                     <StringItem index="4" value="Highest Response Ratio Next"/>
+                    <StringItem index="5" value="Feedback"/>
                   </StringArray>
                 </Property>
               </Properties>

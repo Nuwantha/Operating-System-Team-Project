@@ -343,7 +343,7 @@ public class AddProcessForm extends javax.swing.JFrame {
 
         jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder("Select Algorithm you want"));
 
-        algorithemChoosingCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "First In First Out", "Shortest Time Remaining", "Shortest Process Next", "Round Robin", "Highest Response Ratio Next" }));
+        algorithemChoosingCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "First In First Out", "Shortest Time Remaining", "Shortest Process Next", "Round Robin", "Highest Response Ratio Next", "Feedback" }));
         algorithemChoosingCombo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 algorithemChoosingComboActionPerformed(evt);
@@ -472,8 +472,16 @@ public class AddProcessForm extends javax.swing.JFrame {
     private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
         
         currentAlgorithmLabel.setText(algorithemChoosingCombo.getSelectedItem().toString());
-        if (algorithemChoosingCombo.getSelectedIndex() == 1) {
+        if (algorithemChoosingCombo.getSelectedIndex() == 0) {
+            scheduler.sheduleFCFS();
+        }else if(algorithemChoosingCombo.getSelectedIndex() == 1) {
             scheduler.ShortestRemainingTimeNext();
+        }else if(algorithemChoosingCombo.getSelectedIndex() == 2) {
+            scheduler.SPN();
+        }else if (algorithemChoosingCombo.getSelectedIndex() == 3) {
+            scheduler.scheduleRoundRobin();
+        }else if(algorithemChoosingCombo.getSelectedIndex() == 5) {
+            scheduler.feedback();
         }
         
         addProcessGUI(10, scheduler.timelist.size(), labelPanel);

@@ -12,15 +12,11 @@ import java.util.Calendar;
  *
  * @author Gimhani
  */
-public class Process {
+public class Process implements Comparable<Process>{
 
-    public int getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(int startTime) {
-        this.startTime = startTime;
-    }
+    
+    
+    
     private int startTime;
     private String name;
     private String processId;
@@ -46,7 +42,13 @@ public class Process {
         this.startTime=-1;
     }
 
-    
+    public int getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(int startTime) {
+        this.startTime = startTime;
+    }
     
 
     public Process(String name, String processId, int serviceTime, int startTime, int position) {
@@ -56,6 +58,8 @@ public class Process {
         this.arivalTime = startTime;
         this.position = position;
         this.startTime=-1;
+        remainingTime = serviceTime;//////////////
+       
     }
 
     public int getPosition() {
@@ -146,5 +150,13 @@ public class Process {
     public void setInprocess(boolean inprocess) {
         this.inprocess = inprocess;
     }
+
+    
+    public int compareTo(Process p) {
+        int compare=((Process)p).getStartTime();
+        /* For Ascending order*/
+        return p.getStartTime()-compare;
+    }
+    
 
 }
