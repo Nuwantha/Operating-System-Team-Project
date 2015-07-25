@@ -7,16 +7,13 @@ package shortestremainingtimenext;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Comparator;
 
 /**
  *
  * @author Gimhani
  */
-public class Process implements Comparable<Process>{
-
-    
-    
-    
+public class Process implements Comparable<Process>, Comparator<Process>{
     private int startTime;
     private String name;
     private String processId;
@@ -28,6 +25,21 @@ public class Process implements Comparable<Process>{
     boolean inprocess;
     private int position;
     private int waitingTime;
+    
+    
+   // Overriding the compareTo method
+    @Override
+   public int compareTo(Process p){
+      return (this.name).compareTo(p.name);
+   }
+
+   // Overriding the compare method to sort the starttime
+    @Override
+   public int compare(Process p, Process p1){
+      return p.startTime - p1.startTime;
+   }
+    
+
 
     public int getWaitingTime() {
         return waitingTime;
@@ -152,11 +164,6 @@ public class Process implements Comparable<Process>{
     }
 
     
-    public int compareTo(Process p) {
-        int compare=((Process)p).getArivalTime();
-        /* For Ascending order*/
-        return p.getArivalTime()-compare;
-    }
-    
+       
 
 }
