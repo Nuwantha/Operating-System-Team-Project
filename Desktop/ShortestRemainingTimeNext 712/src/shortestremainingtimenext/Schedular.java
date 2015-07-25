@@ -213,19 +213,9 @@ public class Schedular {
         int tempQuantum = timeQuantum;
         int time = 0;
         int i = 0;
-        int x=0;
+     
         ArrayList<Process> tempProcessList = new ArrayList <Process> ();
-        
-                         /*  
-            System.out.println("time "+time);
-            System.out.println("processlist ");
-            for (int k = 0; k < processlist.size(); k++) {
-            System.out.print(processlist.get(k).getProcessId() + " ");
-            }
-                System.out.println("timelist ");
-            for (int k = 0; k < timelist.size(); k++) {
-            System.out.print(timelist.get(k).getProcessId() + " ");
-            } */
+       
          while (true){
              
             for(int j=0;j<processlist.size();j++){
