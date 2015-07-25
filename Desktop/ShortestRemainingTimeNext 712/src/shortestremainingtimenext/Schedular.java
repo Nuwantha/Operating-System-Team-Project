@@ -213,31 +213,68 @@ public class Schedular {
         int tempQuantum = timeQuantum;
         int time = 0;
         int i = 0;
-        while (processlist.size() > 0) {
-            if (processlist.get(i).getStartTime() <= time) { //if the process has arrived at the time
-                if (tempQuantum == 0) {                        //if the timequantum allocated has finished for the recently executed process
-                    Process temp = processlist.remove(i);   // add that process to the end of the queue
-                    processlist.add(temp);
-                    tempQuantum = timeQuantum;
-
-                } else {
-                    processlist.get(i).setServiceTime((processlist.get(i).getServiceTime()) - 1); //execute the process 
-                    tempQuantum--;
-
-                    timelist.add(processlist.get(i));
+        int x=0;
+        ArrayList<Process> tempProcessList = new ArrayList <Process> ();
+        
+                         /*  
+            System.out.println("time "+time);
+            System.out.println("processlist ");
+            for (int k = 0; k < processlist.size(); k++) {
+            System.out.print(processlist.get(k).getProcessId() + " ");
+            }
+                System.out.println("timelist ");
+            for (int k = 0; k < timelist.size(); k++) {
+            System.out.print(timelist.get(k).getProcessId() + " ");
+            } */
+         while (true){
+             
+            for(int j=0;j<processlist.size();j++){
+                if (processlist.get(j).getArivalTime()==time){
+                    tempProcessList.add(processlist.get(j));
+                    processlist.remove(j);
                 }
-                if (processlist.get(i).getServiceTime() == 0) {    //check if the process currenly has finished
-                    processlist.remove(i);
-                    tempQuantum = timeQuantum;
-
+                
+            }     
+            if (processlist.size()==0 && tempProcessList.size()==0){
+                break;
+            }
+                    
+            if (tempProcessList.size()==0){
+                timelist.add(null);
+            }
+            
+            if (tempQuantum == 0) {                        //if the timequantum allocated has finished for the recently executed process
+                if (tempProcessList.get(i).getServiceTime() == 0) {    //check if the process has finished
+                    tempProcessList.remove(i);
+                }   
+                else {
+                    Process temp = tempProcessList.remove(i);   // if not add that process to the end of the queue
+                    tempProcessList.add(temp);
                 }
+                 tempQuantum = timeQuantum;
+                    
+            }
+            
+            if (tempProcessList.get(i).getServiceTime()!=0){
+                tempProcessList.get(i).setServiceTime((tempProcessList.get(i).getServiceTime()) - 1); //execute the process 
+                tempQuantum--;
+                timelist.add(tempProcessList.get(i));
+            }
+            
+            if (tempProcessList.get(i).getServiceTime() == 0) {    //check if the process currenly has finished
+                tempProcessList.remove(i);
+                tempQuantum = timeQuantum;
 
             }
             time++;
+                     
+                
+    }            
+           
 
-        }
+        
         for (int k = 0; k < timelist.size(); k++) {
-            System.out.print(timelist.get(k) + " ");
+           System.out.print(timelist.get(k).getProcessId() + " ");
         }
 
     }
