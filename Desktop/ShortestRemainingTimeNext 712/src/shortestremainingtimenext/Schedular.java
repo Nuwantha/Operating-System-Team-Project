@@ -79,7 +79,7 @@ public class Schedular {
 
         while (processlist.size() > 0) {
             for (int i = 0; i < processlist.size(); i++) {
-                if (processlist.get(i).getStartTime() <= Ttime) {
+                if (processlist.get(i).getArivalTime() <= Ttime) {
                     currprocess.add(processlist.get(i));
                 }
             }
@@ -159,7 +159,7 @@ public class Schedular {
         while (j < 5) {
 
             while (multilevel[j].size() > 0) {
-                if ( multilevel[j].get(i).getStartTime()<= time) { //if the process has arrived at the time
+                if ( multilevel[j].get(i).getArivalTime()<= time) { //if the process has arrived at the time
                     if (tempQuantum == 0) {                        //if the timequantum allocated has finished for the recently executed process
                         Process temp = multilevel[j].remove(i);   // add that process to the end of the queue
                         if (temp != null) {
@@ -214,7 +214,7 @@ public class Schedular {
         int time = 0;
         int i = 0;
         while (processlist.size() > 0) {
-            if (processlist.get(i).getStartTime() <= time) { //if the process has arrived at the time
+            if (processlist.get(i).getArivalTime() <= time) { //if the process has arrived at the time
                 if (tempQuantum == 0) {                        //if the timequantum allocated has finished for the recently executed process
                     Process temp = processlist.remove(i);   // add that process to the end of the queue
                     processlist.add(temp);

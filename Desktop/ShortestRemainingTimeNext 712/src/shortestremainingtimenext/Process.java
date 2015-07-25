@@ -153,9 +153,9 @@ public class Process implements Comparable<Process>{
 
     
     public int compareTo(Process p) {
-        int compare=((Process)p).getStartTime();
+        int compare=((Process)p).getArivalTime();
         /* For Ascending order*/
-        return p.getStartTime()-compare;
+        return p.getArivalTime()-compare;
     }
     
 

@@ -36,6 +36,8 @@ public class AddProcessForm extends javax.swing.JFrame {
     public AddProcessForm() {
         initComponents();
         position = 0;
+        ProcessIDText.setText("1");
+        ProcessIDText.setEditable(false);
         
     }
 
@@ -80,6 +82,7 @@ public class AddProcessForm extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
+        restoreButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -392,6 +395,13 @@ public class AddProcessForm extends javax.swing.JFrame {
 
         jLabel10.setText("A Project by ");
 
+        restoreButton.setText("Restore");
+        restoreButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                restoreButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout titlepanelLayout = new javax.swing.GroupLayout(titlepanel);
         titlepanel.setLayout(titlepanelLayout);
         titlepanelLayout.setHorizontalGroup(
@@ -406,6 +416,8 @@ public class AddProcessForm extends javax.swing.JFrame {
                         .addComponent(jLabel10))
                     .addGroup(titlepanelLayout.createSequentialGroup()
                         .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(restoreButton)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -419,9 +431,15 @@ public class AddProcessForm extends javax.swing.JFrame {
                         .addContainerGap()
                         .addComponent(jLabel11))
                     .addComponent(jLabel10))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGroup(titlepanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(titlepanelLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addGroup(titlepanelLayout.createSequentialGroup()
+                        .addGap(34, 34, 34)
+                        .addComponent(restoreButton)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
             .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
@@ -460,7 +478,7 @@ public class AddProcessForm extends javax.swing.JFrame {
             Process pro = new Process(processName, processID, serviceTime, arivalTime, position);
             position++;// use to identyfy the process position
             scheduler.processlist.add(pro);
-            ProcessIDText.setText(null);
+            ProcessIDText.setText(Integer.toString(Integer.parseInt(ProcessIDText.getText())+1));
             ProcessNameText.setText(null);
             arrivalTimeSpinner.setValue(0);
             serviceTimeSpinner.setValue(0);
@@ -485,9 +503,17 @@ public class AddProcessForm extends javax.swing.JFrame {
         }
         
         addProcessGUI(10, scheduler.timelist.size(), labelPanel);
-        
-        for (int i = 0; i < scheduler.timelist.size() - 1; i++) {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(AddProcessForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        labelarray[0][0].setText("0");
+        labelarray[0][0].setHorizontalAlignment(JLabel.RIGHT);
+        for (int i = 0; i < scheduler.timelist.size() ; i++) {
+            labelarray[0][i+1].setHorizontalAlignment(JLabel.RIGHT);
             labelarray[0][i + 1].setText(String.valueOf(i + 1));
+            
             // use names rows in label list
             if ("".equals(labelarray[scheduler.timelist.get(i).getPosition() + 1][0].getText())) {
                 labelarray[scheduler.timelist.get(i).getPosition() + 1][0].setText(scheduler.timelist.get(i).getProcessId());
@@ -495,7 +521,11 @@ public class AddProcessForm extends javax.swing.JFrame {
 
             //colour time inteval
             labelarray[scheduler.timelist.get(i).getPosition() + 1][i + 1].setBackground(Color.red);
-            
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(AddProcessForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         resultTableModel = (DefaultTableModel) resultTable.getModel();
         for (int x = 0; x < scheduler.resultList.size(); x++) {
@@ -528,21 +558,29 @@ public class AddProcessForm extends javax.swing.JFrame {
           
         }
     }//GEN-LAST:event_removeButtonActionPerformed
+
+    private void restoreButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_restoreButtonActionPerformed
+        initComponents();
+        position = 0;
+        ProcessIDText.setText("1");
+        processTable.removeAll();
+        ProcessIDText.setEditable(false);
+    }//GEN-LAST:event_restoreButtonActionPerformed
     
     private void addProcessGUI(int no_of_processes, int total_service_time, JPanel labelPanel) {
-        labelPanel.setLayout(new GridLayout(no_of_processes, total_service_time));
-        labelarray = new JLabel[no_of_processes][total_service_time];
+        labelPanel.setLayout(new GridLayout(no_of_processes, total_service_time+1));
+        labelarray = new JLabel[no_of_processes][total_service_time+1];
         for (int i = 0; i < no_of_processes; i++) {
-            for (int j = 0; j < total_service_time; j++) {
+            for (int j = 0; j < total_service_time+1; j++) {
                 JLabel childLabel = new JLabel("");
                 childLabel.setOpaque(true);
                 childLabel.setBorder(new LineBorder(Color.black));
                 if (i == 0 || j == 0) {
-                    childLabel.setBackground(Color.GREEN);
+                    childLabel.setBackground(Color.cyan);
                     
                 } else {
                     
-                    childLabel.setBackground(Color.yellow);
+                    childLabel.setBackground(Color.LIGHT_GRAY);
                 }
                 labelPanel.add(childLabel);
                 labelarray[i][j] = childLabel;
@@ -622,6 +660,7 @@ public class AddProcessForm extends javax.swing.JFrame {
     private javax.swing.JPanel panel1;
     private javax.swing.JTable processTable;
     private javax.swing.JButton removeButton;
+    private javax.swing.JButton restoreButton;
     private javax.swing.JTable resultTable;
     private javax.swing.JSpinner serviceTimeSpinner;
     private javax.swing.JButton startButton;
