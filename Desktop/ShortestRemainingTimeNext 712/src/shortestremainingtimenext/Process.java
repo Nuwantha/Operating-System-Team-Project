@@ -36,7 +36,7 @@ public class Process implements Comparable<Process>, Comparator<Process>{
    // Overriding the compare method to sort the starttime
     @Override
    public int compare(Process p, Process p1){
-      return p.startTime - p1.startTime;
+      return p.arivalTime - p1.arivalTime;
    }
     
 
@@ -63,11 +63,11 @@ public class Process implements Comparable<Process>, Comparator<Process>{
     }
     
 
-    public Process(String name, String processId, int serviceTime, int startTime, int position) {
+    public Process(String name, String processId, int serviceTime, int arivalTime, int position) {
         this.name = name;
         this.processId = processId;
         this.serviceTime = serviceTime;
-        this.arivalTime = startTime;
+        this.arivalTime = arivalTime;
         this.position = position;
         this.startTime=-1;
         remainingTime = serviceTime;//////////////

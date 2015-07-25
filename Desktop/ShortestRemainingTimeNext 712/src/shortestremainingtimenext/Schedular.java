@@ -208,13 +208,13 @@ public class Schedular {
 
     public void scheduleRoundRobin() {
         // Sorts the array list using comparator according to the starttime
-        Collections.sort(processlist);
-        int timeQuantum = 2; //// time Quantum SHOULD be passed by user
+        Collections.sort(processlist, new Process());
+        int timeQuantum = 2;
         int tempQuantum = timeQuantum;
         int time = 0;
         int i = 0;
         while (processlist.size() > 0) {
-            if (processlist.get(i).getStartTime() <= time) { //if the process has arrived at the time
+            if (processlist.get(i).getArivalTime() <= time) { //if the process has arrived at the time
                 if (tempQuantum == 0) {                        //if the timequantum allocated has finished for the recently executed process
                     Process temp = processlist.remove(i);   // add that process to the end of the queue
                     processlist.add(temp);
