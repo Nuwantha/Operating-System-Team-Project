@@ -31,8 +31,139 @@ public class Schedular {
         completedList = new ArrayList<Process>();
 
     }
+////////////////////////////////
+        public void sheduleSRT() {
+        int minServTime, minServInd, time = 0, i;
+        while (processlist.size() > 0) {
+            minServTime = Integer.MAX_VALUE;
+            minServInd = -1;
+            i = 0;
+            while (i < processlist.size()) {
+                if (processlist.get(i).getServiceTime() == 0) {
+                    processlist.remove(i);
+                    continue;
+                }
+                if (processlist.get(i).getStartTime() <= time) {
+                    if (processlist.get(i).getServiceTime() < minServTime || (processlist.get(i).getServiceTime() == minServTime && minServInd > i)) {
+                        minServTime = processlist.get(i).getServiceTime();
+                        minServInd = i;
+                    }
+                }
+                i++;
+            }
+            if (minServInd >= 0) {
+                timelist.add((processlist.get(minServInd)));
+                processlist.get(minServInd).setServiceTime((processlist.get(minServInd).getServiceTime()) - 1);
+            } else {
+                timelist.add(null);
+            }
+            time++;
+        }
+        for (int k = 0; k < timelist.size(); k++) {
+            System.out.print(timelist.get(k) + " ");
+        }
+    }
 
-    public ArrayList<Process> ShortestRemainingTimeNext() {
+    public void sheduleFCFS() {
+
+        int Ttime = 0;
+        int j = 0;
+        Process min = processlist.get(0);
+        Process min1 = processlist.get(0);
+        ArrayList<Process> currprocess = new ArrayList<Process>();
+
+        while (processlist.size() > 0) {
+            for (int i = 0; i < processlist.size(); i++) {
+                if (processlist.get(i).getStartTime() <= Ttime) {
+                    currprocess.add(processlist.get(i));
+                }
+            }
+
+            for (Process l : currprocess) {
+                if (l.getStartTime() <= min.getStartTime()) {
+                    min = l;
+                }
+            }
+            while (min.getServiceTime() > 0) {
+                if (min.getStartTime() <= Ttime) {
+                    timelist.add(min);
+                    min.setServiceTime(min.getServiceTime() - 1);
+
+                    Ttime++;
+                } else {
+                    timelist.add(null);
+                    Ttime++;
+                }
+            }
+            processlist.remove(min);
+            if (processlist.size() > 0) {
+                min = processlist.get(0);
+            } else {
+                min = min1;
+            }
+            currprocess.clear();
+
+        }
+        for (int k = 0; k < timelist.size(); k++) {
+            System.out.print(timelist.get(k) + " ");
+        }
+    }
+
+    public void sheduleHRRN() {
+        int Ttime = 0;
+        Process max = processlist.get(0);
+        Process max1 = processlist.get(0);
+        ArrayList<Process> currprocess = new ArrayList<Process>();
+
+        while (processlist.size() > 0) {
+            for (int i = 0; i < processlist.size(); i++) {
+                if (processlist.get(i).getStartTime() <= Ttime) {
+                    currprocess.add(processlist.get(i));
+                }
+            }
+            for (int i = 0; i < currprocess.size(); i++) {
+                currprocess.get(i).setPriority(currprocess.get(i).getWaitingTime(), currprocess.get(i).getServiceTime());
+
+            }
+            for (Process i : currprocess) {
+                if (i.priority > max.priority) {
+                    max = i;
+                }
+            }
+
+            while (max.getServiceTime() > 0) {
+                if (max.getStartTime() <= Ttime) {
+                    timelist.add(max);
+                    max.setServiceTime(max.getServiceTime() - 1);
+                    for (int i = 0; i < processlist.size(); i++) {
+                        if (processlist.get(i).getStartTime() <= Ttime) {
+                            processlist.get(i).setWaitingTime();
+
+                        }
+                    }
+                    Ttime++;
+                } else {
+                    timelist.add(null);
+                    Ttime++;
+                }
+            }
+            processlist.remove(max);
+            if (processlist.size() > 0) {
+                max = processlist.get(0);
+            } else {
+                max = max1;
+            }
+            currprocess.clear();
+        }
+        for (int k = 0; k < timelist.size(); k++) {
+            System.out.print(timelist.get(k) + " ");
+        }
+    }
+    
+    
+    
+    /////////////////////////////////
+    /*public ArrayList<Process> ShortestRemainingTimeNext() {
         int minServTime, minServInd, time = 0, i;
         while (processlist.size() > 0) {
             minServTime = Integer.MAX_VALUE;
