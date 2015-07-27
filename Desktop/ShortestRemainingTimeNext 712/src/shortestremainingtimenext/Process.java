@@ -13,7 +13,8 @@ import java.util.Comparator;
  *
  * @author Gimhani
  */
-public class Process implements Comparable<Process>, Comparator<Process>{
+public class Process implements Comparable<Process>, Comparator<Process> {
+
     private int startTime;
     private String name;
     private String processId;
@@ -25,33 +26,40 @@ public class Process implements Comparable<Process>, Comparator<Process>{
     boolean inprocess;
     private int position;
     private int waitingTime;
-    
-    
-   // Overriding the compareTo method
-    @Override
-   public int compareTo(Process p){
-      return (this.name).compareTo(p.name);
-   }
+    double priority;
 
-   // Overriding the compare method to sort the starttime
+    // Overriding the compareTo method
     @Override
-   public int compare(Process p, Process p1){
-      return p.arivalTime - p1.arivalTime;
-   }
-    
+    public int compareTo(Process p) {
+        return (this.name).compareTo(p.name);
+    }
 
+    // Overriding the compare method to sort the starttime
+    @Override
+    public int compare(Process p, Process p1) {
+        return p.arivalTime - p1.arivalTime;
+    }
+
+    public double getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int waitingtime, int servicetime) {
+        double val = ((waitingtime) + (serviceTime)) / (serviceTime * 1.00);
+        priority = val;
+    }
 
     public int getWaitingTime() {
         return waitingTime;
     }
 
-    public void setWaitingTime(int waitingTime) {
-        this.waitingTime = waitingTime;
+    public void setWaitingTime() {
+        this.waitingTime = waitingTime + 1;
     }
 
     Process() {
         remainingTime = serviceTime;
-        this.startTime=-1;
+        this.startTime = -1;
     }
 
     public int getStartTime() {
@@ -61,7 +69,6 @@ public class Process implements Comparable<Process>, Comparator<Process>{
     public void setStartTime(int startTime) {
         this.startTime = startTime;
     }
-    
 
     public Process(String name, String processId, int serviceTime, int startTime, int position) {
         this.name = name;
@@ -69,9 +76,9 @@ public class Process implements Comparable<Process>, Comparator<Process>{
         this.serviceTime = serviceTime;
         this.arivalTime = startTime;
         this.position = position;
-        this.startTime=-1;
+        this.startTime = -1;
         remainingTime = serviceTime;//////////////
-       
+
     }
 
     public int getPosition() {
@@ -162,8 +169,5 @@ public class Process implements Comparable<Process>, Comparator<Process>{
     public void setInprocess(boolean inprocess) {
         this.inprocess = inprocess;
     }
-
-    
-       
 
 }
