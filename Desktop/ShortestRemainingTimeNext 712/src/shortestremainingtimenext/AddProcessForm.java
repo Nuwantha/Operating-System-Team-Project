@@ -493,11 +493,13 @@ public class AddProcessForm extends javax.swing.JFrame {
         if (algorithemChoosingCombo.getSelectedIndex() == 0) {
             scheduler.sheduleFCFS();
         }else if(algorithemChoosingCombo.getSelectedIndex() == 1) {
-            scheduler.ShortestRemainingTimeNext();
+            scheduler.sheduleSRT();
         }else if(algorithemChoosingCombo.getSelectedIndex() == 2) {
             scheduler.SPN();
         }else if (algorithemChoosingCombo.getSelectedIndex() == 3) {
             scheduler.scheduleRoundRobin();
+        }else if (algorithemChoosingCombo.getSelectedIndex() == 4) {
+            scheduler.sheduleHRRN();
         }else if(algorithemChoosingCombo.getSelectedIndex() == 5) {
             scheduler.feedback();
         }
