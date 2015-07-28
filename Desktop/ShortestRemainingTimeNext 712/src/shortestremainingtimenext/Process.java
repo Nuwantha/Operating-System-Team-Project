@@ -21,13 +21,23 @@ public class Process implements Comparable<Process>, Comparator<Process> {
     private int serviceTime;
     private int remainingTime;
     private int turnAroundTime;
+    private double normalizedTurnaroundTime;
     private int arivalTime;
     private int endTime;
     boolean inprocess;
     private int position;
     private int waitingTime;
     double priority;
+    
+    Process() {       
+        remainingTime = serviceTime;
+        this.startTime = -1;
+    }
 
+    
+    
+    
+    
     // Overriding the compareTo method
     @Override
     public int compareTo(Process p) {
@@ -44,6 +54,14 @@ public class Process implements Comparable<Process>, Comparator<Process> {
         return priority;
     }
 
+    public double getNormalizedTurnaroundTime() {
+        return this.normalizedTurnaroundTime;
+    }
+
+    public void setNormalizedTurnaroundTime() {
+        this.normalizedTurnaroundTime=this.turnAroundTime/(double)this.serviceTime;
+    }
+
     public void setPriority(int waitingtime, int servicetime) {
         double val = ((waitingtime) + (serviceTime)) / (serviceTime * 1.00);
         priority = val;
@@ -57,11 +75,7 @@ public class Process implements Comparable<Process>, Comparator<Process> {
         this.waitingTime = waitingTime + 1;
     }
 
-    Process() {
-        remainingTime = serviceTime;
-        this.startTime = -1;
-    }
-
+    
     public int getStartTime() {
         return startTime;
     }
@@ -101,8 +115,8 @@ public class Process implements Comparable<Process>, Comparator<Process> {
         return turnAroundTime;
     }
 
-    public void setTurnAroundTime(int turnAroundTime) {
-        this.turnAroundTime = turnAroundTime;
+    public void setTurnAroundTime() {
+        this.turnAroundTime = this.endTime-this.arivalTime;
     }
 
     public Process(String processId, int serviceTime) {

@@ -32,30 +32,41 @@ public class Schedular {
 
     }
 ////////////////////////////////
-        public void sheduleSRT() {
+
+    //completed
+    public void sheduleSRT() {
         int minServTime, minServInd, time = 0, i;
         while (processlist.size() > 0) {
             minServTime = Integer.MAX_VALUE;
             minServInd = -1;
             i = 0;
+            //travel through list
             while (i < processlist.size()) {
-                if (processlist.get(i).getServiceTime() == 0) {
+                if (processlist.get(i).getRemainingTime() == 0) {
+                    Process endProcess = processlist.get(i);
+                    endProcess.setEndTime(time);
+                    endProcess.setTurnAroundTime();
+                    endProcess.setNormalizedTurnaroundTime();
+                    resultList.add(endProcess);
                     processlist.remove(i);
                     continue;
                 }
-                if (processlist.get(i).getStartTime() <= time) {
-                    if (processlist.get(i).getServiceTime() < minServTime || (processlist.get(i).getServiceTime() == minServTime && minServInd > i)) {
-                        minServTime = processlist.get(i).getServiceTime();
+                if (processlist.get(i).getArivalTime() <= time) {
+                    if (processlist.get(i).getRemainingTime() < minServTime || (processlist.get(i).getRemainingTime() == minServTime && minServInd > i)) {
+                        minServTime = processlist.get(i).getRemainingTime();
                         minServInd = i;
                     }
                 }
                 i++;
             }
             if (minServInd >= 0) {
+                if (processlist.get(minServInd).getStartTime() < 0) {
+                    processlist.get(minServInd).setStartTime(time);
+                }
                 timelist.add((processlist.get(minServInd)));
-                processlist.get(minServInd).setServiceTime((processlist.get(minServInd).getServiceTime()) - 1);
+                processlist.get(minServInd).setRemainingTime((processlist.get(minServInd).getRemainingTime()) - 1);
             } else {
-                timelist.add(null);
+                //timelist.add(null);
             }
             time++;
         }
@@ -108,7 +119,7 @@ public class Schedular {
             System.out.print(timelist.get(k) + " ");
         }
     }
-
+    
     public void sheduleHRRN() {
         int Ttime = 0;
         Process max = processlist.get(0);
@@ -159,94 +170,92 @@ public class Schedular {
             System.out.print(timelist.get(k) + " ");
         }
     }
-    
-    
-    
+
     /////////////////////////////////
     /*public ArrayList<Process> ShortestRemainingTimeNext() {
-        int minServTime, minServInd, time = 0, i;
-        while (processlist.size() > 0) {
-            minServTime = Integer.MAX_VALUE;
-            minServInd = -1;
-            i = 0;
-            while (i < processlist.size()) {
-                if (processlist.get(i).getServiceTime() == 0) {
-                    processlist.get(i).setEndTime(time);
-                    resultList.add(processlist.get(i));
-                    processlist.remove(i);
+     int minServTime, minServInd, time = 0, i;
+     while (processlist.size() > 0) {
+     minServTime = Integer.MAX_VALUE;
+     minServInd = -1;
+     i = 0;
+     while (i < processlist.size()) {
+     if (processlist.get(i).getServiceTime() == 0) {
+     processlist.get(i).setEndTime(time);
+     resultList.add(processlist.get(i));
+     processlist.remove(i);
 
-                    continue;
-                }
-                if (processlist.get(i).getArivalTime() <= time) {
-                    if (processlist.get(i).getServiceTime() < minServTime || (processlist.get(i).getServiceTime() == minServTime && minServInd > i)) {
-                        minServTime = processlist.get(i).getServiceTime();
-                        minServInd = i;
-                    }
-                }
-                i++;
-            }
-            if (minServInd >= 0) {
-                timelist.add((processlist.get(minServInd)));
-                if (processlist.get(minServInd).getStartTime() < 0) {
-                    processlist.get(minServInd).setStartTime(time);
-                }
-                processlist.get(minServInd).setServiceTime((processlist.get(minServInd).getServiceTime()) - 1);
-            } else {
-                timelist.add(null);
-            }
-            time++;
-        }
+     continue;
+     }
+     if (processlist.get(i).getArivalTime() <= time) {
+     if (processlist.get(i).getServiceTime() < minServTime || (processlist.get(i).getServiceTime() == minServTime && minServInd > i)) {
+     minServTime = processlist.get(i).getServiceTime();
+     minServInd = i;
+     }
+     }
+     i++;
+     }
+     if (minServInd >= 0) {
+     timelist.add((processlist.get(minServInd)));
+     if (processlist.get(minServInd).getStartTime() < 0) {
+     processlist.get(minServInd).setStartTime(time);
+     }
+     processlist.get(minServInd).setServiceTime((processlist.get(minServInd).getServiceTime()) - 1);
+     } else {
+     timelist.add(null);
+     }
+     time++;
+     }
 
-        return processlist;
-    }
+     return processlist;
+     }
 
-    public void sheduleFCFS() {
+     public void sheduleFCFS() {
 
-        int Ttime = 0;
-        int j = 0;
-        Process min = processlist.get(0);
-        Process min1 = processlist.get(0);
-        ArrayList<Process> currprocess = new ArrayList<Process>();
+     int Ttime = 0;
+     int j = 0;
+     Process min = processlist.get(0);
+     Process min1 = processlist.get(0);
+     ArrayList<Process> currprocess = new ArrayList<Process>();
 
-        while (processlist.size() > 0) {
-            for (int i = 0; i < processlist.size(); i++) {
-                if (processlist.get(i).getArivalTime() <= Ttime) {
-                    currprocess.add(processlist.get(i));
-                }
-            }
+     while (processlist.size() > 0) {
+     for (int i = 0; i < processlist.size(); i++) {
+     if (processlist.get(i).getArivalTime() <= Ttime) {
+     currprocess.add(processlist.get(i));
+     }
+     }
 
-            for (Process l : currprocess) {
-                if (l.getStartTime() <= min.getStartTime()) {
-                    min = l;
-                }
-            }
-            while (min.getServiceTime() > 0) {
-                if (min.getStartTime() <= Ttime) {
-                    timelist.add(min);
-                    min.setServiceTime(min.getServiceTime() - 1);
+     for (Process l : currprocess) {
+     if (l.getStartTime() <= min.getStartTime()) {
+     min = l;
+     }
+     }
+     while (min.getServiceTime() > 0) {
+     if (min.getStartTime() <= Ttime) {
+     timelist.add(min);
+     min.setServiceTime(min.getServiceTime() - 1);
 
-                    Ttime++;
-                } else {
-                    timelist.add(null);
-                    Ttime++;
-                }
-            }
-            processlist.remove(min);
-            if (processlist.size() > 0) {
-                min = processlist.get(0);
-            } else {
-                min = min1;
-            }
-            currprocess.clear();
+     Ttime++;
+     } else {
+     timelist.add(null);
+     Ttime++;
+     }
+     }
+     processlist.remove(min);
+     if (processlist.size() > 0) {
+     min = processlist.get(0);
+     } else {
+     min = min1;
+     }
+     currprocess.clear();
 
-        }
-        for (int k = 0; k < timelist.size(); k++) {
-            System.out.print(timelist.get(k).getProcessId() + " ");
-        }
+     }
+     for (int k = 0; k < timelist.size(); k++) {
+     System.out.print(timelist.get(k).getProcessId() + " ");
+     }
 
-    }
+     }
 
-    /**
+     /**
      * public void sheduleHRRN(){ int Ttime=0; Process max=processlist.get(0);
      * Process max1=processlist.get(0); ArrayList<Process> currprocess=new
      * ArrayList<Process>();
@@ -276,61 +285,83 @@ public class Schedular {
     public void feedback() {
         // Sorts the array list using comparator according to the starttime
         Collections.sort(processlist);
-        ArrayList<Process>[] multilevel = new ArrayList[5];
+        ArrayList<Process>[] multilevel = new ArrayList[5]; //5 multi levels
         for (int k = 0; k < 5; k++) {
-            multilevel[k] = new ArrayList<Process>();
+            multilevel[k] = new ArrayList<Process>();   //initializing each queue
         }
-        multilevel[0] = processlist;
+
         int timeQuantum = 2;
         int tempQuantum = timeQuantum;
         int time = 0;
         int i = 0;
         int j = 0;
+        //int size = 0;
+        int inter_size = 0;
+        int process_count=processlist.size();
+        while (process_count>0) {
 
-        while (j < 5) {
-
-            while (multilevel[j].size() > 0) {
-                if ( multilevel[j].get(i).getArivalTime()<= time) { //if the process has arrived at the time
-                    if (tempQuantum == 0) {                        //if the timequantum allocated has finished for the recently executed process
-                        Process temp = multilevel[j].remove(i);   // add that process to the end of the queue
-                        if (temp != null) {
-                            if (j == 4) {
-                                multilevel[j].add(temp);
-                            } else if (j < 4) {
-                                multilevel[j + 1].add(temp);
-                            }
-                            tempQuantum = timeQuantum;
-                        }
-                    } else {
-                        multilevel[j].get(i).setServiceTime((multilevel[j].get(i).getServiceTime()) - 1); //execute the process 
-                       
-                        tempQuantum--;
-
-                        timelist.add(multilevel[j].get(i));
+            while (j<5) {
+                for (Process processlist1 : processlist) {
+                    if (processlist1.getArivalTime() == time) {
+                        multilevel[0].add(processlist1);
+                        process_count--;
+                        
                     }
-                    if (multilevel[j].size() > 0) {
-                        if (multilevel[j].get(i).getServiceTime() == 0) {    //check if the process currenly has finished
-                            completedList.add(multilevel[j].get(i));
-                            multilevel[j].remove(i);
-                            tempQuantum = timeQuantum;
-
-                        }
-                    }
-
                 }
-                
-                for (int k = 0; k < 5; k++) {
+                //////
+                if (tempQuantum == 0) {                        //if the timequantum allocated has finished for the recently executed process
+                    if (multilevel[j].get(i).getRemainingTime() == 0) {    //check if the process has finished
+                        multilevel[j].remove(i);
+                    } else {
+                        Process temp = multilevel[j].remove(i);   // if not add that process to the end of the queue
+
+                        if (j == 4) {
+                            multilevel[j].add(temp);
+                        } else if (j < 4) {
+                            multilevel[j + 1].add(temp);
+                        }
+                    }
+                    tempQuantum = timeQuantum;
+
+                }else{
+                if (multilevel[j].size() > 0) {
+                    if (multilevel[j].get(i).getRemainingTime() != 0) {
+                        multilevel[j].get(i).setRemainingTime((multilevel[j].get(i).getRemainingTime()) - 1); //execute the process 
+                        tempQuantum--;
+                        timelist.add(multilevel[j].get(i));
+                    }else{    //check if the process currenly has finished
+                        multilevel[j].remove(i);
+                        tempQuantum = timeQuantum;
+
+                    }
+                }
+                }
+                //////////////////
+                int last_j=j;
+                for (int k = 0; k < j; k++) {
                     if (multilevel[k].size() > 0) {
                         j = k;
-                        break;
+                        System.out.println(j);
+                        inter_size = 0;
                     }
                 }
+                if (last_j!=j) {
+                    time++;
+                    break;
+                }
                 time++;
+
             }
-            if (multilevel[4].size() == 0) {
+            int size = 0;
+            for (int k = 0; k < 5; k++) {
+                size += multilevel[k].size();
+
+            }
+            System.out.println("whole:"+size);
+            if (size == 0) {
                 break;
             }
-            
+            j++;
         }
         for (int k = 0; k < timelist.size(); k++) {
             System.out.print(timelist.get(k) + " ");
@@ -344,61 +375,58 @@ public class Schedular {
         int tempQuantum = timeQuantum;
         int time = 0;
         int i = 0;
-     
-        ArrayList<Process> tempProcessList = new ArrayList <Process> ();
-       
-         while (true){
-             
-            for(int j=0;j<processlist.size();j++){
-                if (processlist.get(j).getArivalTime()==time){
+
+        ArrayList<Process> tempProcessList = new ArrayList<Process>();
+
+        while (true) {
+
+            for (int j = 0; j < processlist.size(); j++) {
+                if (processlist.get(j).getArivalTime() == time) {
                     tempProcessList.add(processlist.get(j));
                     processlist.remove(j);
                 }
-                
-            }     
-            if (processlist.size()==0 && tempProcessList.size()==0){
+
+            }
+            if (processlist.size() == 0 && tempProcessList.size() == 0) {
                 break;
             }
-                    
-            if (tempProcessList.size()==0){
+
+            if (tempProcessList.size() == 0) {
                 timelist.add(null);
             }
-            
+
             if (tempQuantum == 0) {                        //if the timequantum allocated has finished for the recently executed process
                 if (tempProcessList.get(i).getServiceTime() == 0) {    //check if the process has finished
                     tempProcessList.remove(i);
-                }   
-                else {
+                } else {
                     Process temp = tempProcessList.remove(i);   // if not add that process to the end of the queue
                     tempProcessList.add(temp);
                 }
-                 tempQuantum = timeQuantum;
-                    
+                tempQuantum = timeQuantum;
+
             }
-            
-            if (tempProcessList.get(i).getServiceTime()!=0){
+
+            if (tempProcessList.get(i).getServiceTime() != 0) {
                 tempProcessList.get(i).setServiceTime((tempProcessList.get(i).getServiceTime()) - 1); //execute the process 
                 tempQuantum--;
                 timelist.add(tempProcessList.get(i));
             }
-            
+
             if (tempProcessList.get(i).getServiceTime() == 0) {    //check if the process currenly has finished
                 tempProcessList.remove(i);
                 tempQuantum = timeQuantum;
 
             }
             time++;
-                     
-                
-    }            
-           
 
-        
+        }
+
         for (int k = 0; k < timelist.size(); k++) {
-           System.out.print(timelist.get(k).getProcessId() + " ");
+            System.out.print(timelist.get(k).getProcessId() + " ");
         }
 
     }
+//compled
 
     public void SPN() {
         int minServTime, runingI, time = 0, i;
@@ -414,18 +442,19 @@ public class Schedular {
                 i++;
 
             }
+            Process RuningProcess = processlist.get(runingI);
+            RuningProcess.setStartTime(time);
             while (minServTime > 0) {
                 timelist.add(processlist.get(runingI));
                 time++;
                 minServTime--;
 
             }
+            RuningProcess.setEndTime(time - 1);
+            RuningProcess.setTurnAroundTime();
+            resultList.add(processlist.get(runingI));
             processlist.remove(runingI);
 
-        }
-
-        for (int k = 0; k < timelist.size(); k++) {
-            System.out.print(timelist.get(k) + " ");
         }
 
     }

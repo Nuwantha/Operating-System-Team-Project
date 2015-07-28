@@ -106,6 +106,12 @@ public class AddProcessForm extends javax.swing.JFrame {
 
         jLabel3.setText("Arrival time:");
 
+        arrivalTimeSpinner.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                arrivalTimeSpinnerFocusGained(evt);
+            }
+        });
+
         jLabel4.setText("Service time:");
 
         addNewProcessButton.setText("Add");
@@ -237,7 +243,7 @@ public class AddProcessForm extends javax.swing.JFrame {
 
             },
             new String [] {
-                "PID", "StartTime", "EndTime", "Turnaround Time"
+                "PID", "StartTime", "EndTime", "Turnaround Time", "Normalized Turnaround Time"
             }
         ));
         jScrollPane4.setViewportView(resultTable);
@@ -505,11 +511,6 @@ public class AddProcessForm extends javax.swing.JFrame {
         }
         
         addProcessGUI(10, scheduler.timelist.size(), labelPanel);
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(AddProcessForm.class.getName()).log(Level.SEVERE, null, ex);
-        }
         labelarray[0][0].setText("0");
         labelarray[0][0].setHorizontalAlignment(JLabel.RIGHT);
         for (int i = 0; i < scheduler.timelist.size() ; i++) {
@@ -523,17 +524,16 @@ public class AddProcessForm extends javax.swing.JFrame {
 
             //colour time inteval
             labelarray[scheduler.timelist.get(i).getPosition() + 1][i + 1].setBackground(Color.red);
-            try {
+            /*try {
                 Thread.sleep(1000);
             } catch (InterruptedException ex) {
                 Logger.getLogger(AddProcessForm.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            }*/
         }
         resultTableModel = (DefaultTableModel) resultTable.getModel();
-        for (int x = 0; x < scheduler.resultList.size(); x++) {
-            Process resultProcess = scheduler.resultList.get(x);
-            resultTableModel.addRow(new Object[]{resultProcess.getProcessId(),resultProcess.getStartTime() , resultProcess.getEndTime(),(resultProcess.getEndTime()-resultProcess.getArivalTime())});
-            
+        for (Process resultProcess : scheduler.resultList) {
+            resultTableModel.addRow
+        (new Object[]{resultProcess.getProcessId(),resultProcess.getStartTime() , resultProcess.getEndTime(),resultProcess.getTurnAroundTime(),resultProcess.getNormalizedTurnaroundTime()});
         }
         startButton.disable();
 
@@ -562,12 +562,13 @@ public class AddProcessForm extends javax.swing.JFrame {
     }//GEN-LAST:event_removeButtonActionPerformed
 
     private void restoreButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_restoreButtonActionPerformed
-        initComponents();
-        position = 0;
-        ProcessIDText.setText("1");
-        processTable.removeAll();
-        ProcessIDText.setEditable(false);
+        new AddProcessForm().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_restoreButtonActionPerformed
+
+    private void arrivalTimeSpinnerFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_arrivalTimeSpinnerFocusGained
+      
+    }//GEN-LAST:event_arrivalTimeSpinnerFocusGained
     
     private void addProcessGUI(int no_of_processes, int total_service_time, JPanel labelPanel) {
         labelPanel.setLayout(new GridLayout(no_of_processes, total_service_time+1));

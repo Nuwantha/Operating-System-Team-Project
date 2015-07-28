@@ -19,7 +19,7 @@ import javax.swing.plaf.nimbus.NimbusLookAndFeel;
  * @author Gimhani
  */
 public class ShortestRemainingTimeNext {
-
+        
     /**
      * @param args the command line arguments
      */
