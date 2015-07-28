@@ -79,36 +79,43 @@ public class Schedular {
 
         int Ttime = 0;
         int j = 0;
-        Process min = processlist.get(0);
+        Process min = processlist.get(0);//two precesses to save processes
         Process min1 = processlist.get(0);
-        ArrayList<Process> currprocess = new ArrayList<Process>();
+        ArrayList<Process> currprocess = new ArrayList<Process>();//save process list
 
         while (processlist.size() > 0) {
             for (int i = 0; i < processlist.size(); i++) {
-                if (processlist.get(i).getStartTime() <= Ttime) {
+                //in specific time check if process is available
+                if (processlist.get(i).getArivalTime()<= Ttime) {
                     currprocess.add(processlist.get(i));
                 }
             }
-
+            //get first process in queue
             for (Process l : currprocess) {
-                if (l.getStartTime() <= min.getStartTime()) {
+                if (l.getArivalTime() <= min.getArivalTime()) {
                     min = l;
                 }
             }
-            while (min.getServiceTime() > 0) {
-                if (min.getStartTime() <= Ttime) {
+            //processing stage of the selected process
+            min.setStartTime(Ttime);//set start time of the selected process
+            while (min.getRemainingTime()> 0) {
+                if (min.getArivalTime() <= Ttime) {
                     timelist.add(min);
-                    min.setServiceTime(min.getServiceTime() - 1);
+                    min.setRemainingTime(min.getRemainingTime() - 1);
 
                     Ttime++;
                 } else {
-                    timelist.add(null);
+                    timelist.add(null);//if no process is in given timeslot
                     Ttime++;
                 }
             }
+            min.setEndTime(Ttime);//set end time of the selected process
+            min.setTurnAroundTime();//set turnaround time of the selected process
+            min.setNormalizedTurnaroundTime();
+            resultList.add(min);
             processlist.remove(min);
             if (processlist.size() > 0) {
-                min = processlist.get(0);
+                min = processlist.get(0);//make the first process null
             } else {
                 min = min1;
             }
@@ -116,51 +123,60 @@ public class Schedular {
 
         }
         for (int k = 0; k < timelist.size(); k++) {
-            System.out.print(timelist.get(k) + " ");
+            System.out.print(timelist.get(k).getProcessId() + " ");
         }
     }
     
     public void sheduleHRRN() {
         int Ttime = 0;
-        Process max = processlist.get(0);
+        Process max = processlist.get(0);//two precesses to save processes
         Process max1 = processlist.get(0);
-        ArrayList<Process> currprocess = new ArrayList<Process>();
+        ArrayList<Process> currprocess = new ArrayList<Process>();//save process list
 
         while (processlist.size() > 0) {
             for (int i = 0; i < processlist.size(); i++) {
-                if (processlist.get(i).getStartTime() <= Ttime) {
+                if (processlist.get(i).getArivalTime() <= Ttime) {
                     currprocess.add(processlist.get(i));
                 }
             }
+            //calculate HRR for the processes
             for (int i = 0; i < currprocess.size(); i++) {
-                currprocess.get(i).setPriority(currprocess.get(i).getWaitingTime(), currprocess.get(i).getServiceTime());
+                currprocess.get(i).setPriority(currprocess.get(i).getWaitingTime(), currprocess.get(i).getRemainingTime());
 
             }
+            //get HRR process in queue
             for (Process i : currprocess) {
                 if (i.priority > max.priority) {
                     max = i;
                 }
             }
-
-            while (max.getServiceTime() > 0) {
-                if (max.getStartTime() <= Ttime) {
+            max.setStartTime(Ttime);
+            //processing stage of the selected process
+            while (max.getRemainingTime() > 0) {
+                //check if the process in available in the given timeslot
+                if (max.getArivalTime() <= Ttime)
+                {
                     timelist.add(max);
-                    max.setServiceTime(max.getServiceTime() - 1);
+                    max.setRemainingTime(max.getRemainingTime() - 1);
                     for (int i = 0; i < processlist.size(); i++) {
-                        if (processlist.get(i).getStartTime() <= Ttime) {
+                        if (processlist.get(i).getArivalTime() <= Ttime) {
                             processlist.get(i).setWaitingTime();
 
                         }
                     }
                     Ttime++;
                 } else {
-                    timelist.add(null);
+                    timelist.add(null);//if no process available in the given timeslot
                     Ttime++;
                 }
             }
+            max.setEndTime(Ttime);//set end time
+            max.setTurnAroundTime();//set turnaround time
+            max.setNormalizedTurnaroundTime();
+            resultList.add(max);
             processlist.remove(max);
             if (processlist.size() > 0) {
-                max = processlist.get(0);
+                max = processlist.get(0);//make the selected process null
             } else {
                 max = max1;
             }
